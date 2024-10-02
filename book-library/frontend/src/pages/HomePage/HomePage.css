@@ -1,0 +1,19 @@
+.home-container {
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f8ff;
+    height: 100vh;
+  }
+  
+  .home-title {
+    font-size: 48px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .home-description {
+    font-size: 20px;
+    color: #666;
+    margin-top: 0;
+  }
+  
