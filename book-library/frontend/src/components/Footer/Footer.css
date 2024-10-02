@@ -1,0 +1,31 @@
+.footer {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+  }
+  
+  .footer-links li {
+    display: inline-block;
+  }
+  
+  .footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: transform 0.3s ease-in-out;
+    display: inline-block; 
+  }
+  
+  .footer-links a:hover {
+    transform: scale(1.2); 
+    color: #e3dd8beb; 
+  }
+  
