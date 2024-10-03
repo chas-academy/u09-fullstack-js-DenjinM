@@ -6,10 +6,10 @@ const Footer = () => {
   return (
     <footer className="footer">
       <ul className="footer-links">
-        <li><Link to="/faq">FAQ</Link></li>
-        <li><Link to="/contact">Contact</Link></li>
-        <li><Link to="/register">Register</Link></li>
-        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/Faq">FAQ</Link></li>
+        <li><Link to="/Contact">Contact</Link></li>
+        <li><Link to="/RegisterPage">Register</Link></li>
+        <li><Link to="/LoginPage">Login</Link></li>
       </ul>
     </footer>
   );

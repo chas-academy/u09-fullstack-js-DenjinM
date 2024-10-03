@@ -8,10 +8,10 @@ const Navbar = () => {
       <h1 className="navbar-logo">Book Library</h1>
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/books">Books</Link></li>
-        <li><Link to="/About us">About us</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/register">Register</Link></li>
+        <li><Link to="/BookPage">Books</Link></li>
+        <li><Link to="/AboutUs">About us</Link></li>
+        <li><Link to="/LoginPage">Login</Link></li>
+        <li><Link to="/RegisterPage">Register</Link></li>
       </ul>
     </nav>
   );
