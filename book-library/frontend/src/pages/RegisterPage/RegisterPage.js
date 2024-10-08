@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterPage.css';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
+import backgroundImage from '../../images/register-background.jpg';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -15,7 +16,13 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container"
+    style={{ 
+        backgroundImage: `url(${backgroundImage})`, 
+        backgroundSize: 'cover', 
+        backgroundPosition: 'center', 
+        height: '100vh' 
+      }}>
       <div className="register-box">
         <h2>Register</h2>
         <form onSubmit={handleSubmit}>

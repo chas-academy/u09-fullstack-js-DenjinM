@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
+import backgroundImage from '../../images/books-background.jpg';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container"
+    style={{ 
+      backgroundImage: `url(${backgroundImage})`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center', 
+      height: '100vh' 
+    }}>
       <div className="login-box">
         <h2>Log in</h2>
         <form onSubmit={handleSubmit}>
