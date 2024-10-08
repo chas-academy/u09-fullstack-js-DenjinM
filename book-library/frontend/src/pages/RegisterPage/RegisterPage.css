@@ -1,0 +1,129 @@
+body {
+    background-color: #f4f7f6;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .register-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .input-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .input-group input {
+    width: -webkit-fill-available;
+    padding: 10px;
+    padding-left: 40px; /* För att ge plats åt ikonen */
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .input-group .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 40px;
+    transform: translateY(-50%);
+    color: #100f0f;
+  }
+  
+  .register-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #282c34;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .register-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .register-footer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .register-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .register-link:hover {
+    color: #0056b3;
+  }
+  
+  /* Responsiv design */
+  @media (max-width: 768px) {
+    .register-box {
+      padding: 20px;
+      max-width: 90%;
+    }
+  
+    h2 {
+      font-size: 24px;
+    }
+  
+    .input-group input {
+      font-size: 14px;
+      padding-left: 35px;
+    }
+  
+    .register-btn {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .register-box {
+      padding: 15px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    .input-group input {
+      font-size: 12px;
+      padding-left: 30px;
+    }
+  
+    .register-btn {
+      font-size: 12px;
+      padding: 8px;
+    }
+  }
+  
