@@ -8,11 +8,22 @@
   position: relative;
 }
 
+.navbar-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo-img {
+  width: 30px; /* Anpassa storleken på logotypen */
+  margin-right: 10px;
+}
+
 .navbar-logo {
   font-size: 24px;
   font-weight: bold;
   color: #e3dd8beb;
 }
+
 
 /* Lista för länkar */
 .navbar-links {
