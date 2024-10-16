@@ -8,11 +8,48 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Hantera registrering här
-    console.log({ name, email, password, confirmPassword });
+
+    // Kontrollera att lösenord och bekräftat lösenord matchar
+    if (password !== confirmPassword) {
+      setError('Lösenorden matchar inte');
+      return;
+    }
+
+    try {
+      // Skicka POST-förfrågan till backend
+      const response = await fetch('http://localhost:5001/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Registrering lyckades!');
+        setError('');
+        console.log('Success:', data);
+        // Eventuell omdirigering, t.ex. till inloggningssidan:
+        // window.location.href = '/LoginPage';
+      } else {
+        setError(data.message || 'Registreringsfel, försök igen.');
+      }
+    } catch (error) {
+      setError('Något gick fel. Försök igen senare.');
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -72,6 +109,10 @@ const RegisterPage = () => {
           </div>
           <button type="submit" className="register-btn">Register</button>
         </form>
+
+        {/* Visa framgångsmeddelande eller felmeddelande */}
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
 
         <div className="register-footer">
           <p>Already have an account? <a href="/LoginPage" className="register-link">Log in</a></p>
