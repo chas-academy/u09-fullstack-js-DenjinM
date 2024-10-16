@@ -9,9 +9,11 @@ import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Faq from './pages/Faq/Faq';
 import Contact from './pages/Contact/Contact';
+import Profile from './pages/Profile/Profile';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <Navbar />
       <Routes>
@@ -21,9 +23,11 @@ function App() {
         <Route path="/RegisterPage" element={<RegisterPage />} />
         <Route path="/Faq" element={<Faq />} />
         <Route path="/Contact" element={<Contact />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
     </Router>
+    </AuthProvider>
   );
 }
 

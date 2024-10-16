@@ -1,16 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './LoginPage.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import backgroundImage from '../../images/books-background.jpg';
+import { AuthContext } from '../../contexts/AuthContext'; // Importera AuthContext för att hantera inloggning
+import { useNavigate } from 'react-router-dom'; // Importera useNavigate för att omdirigera användaren
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const { login } = useContext(AuthContext); // Använd login-funktionen från AuthContext
+  const navigate = useNavigate(); // Använd navigate för omdirigering
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Hantera inloggning här
-    console.log({ email, password });
+
+    try {
+      // Skicka POST-förfrågan till backend för att logga in
+      const response = await fetch('http://localhost:5001/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        login(data.token); // Spara token i AuthContext
+        console.log('Inloggning lyckades:', data);
+        navigate('/profile'); // Omdirigera användaren till profilsidan
+      } else {
+        setError(data.message || 'Fel vid inloggning. Försök igen.');
+      }
+    } catch (error) {
+      setError('Serverfel. Försök igen senare.');
+      console.error('Inloggningsfel:', error);
+    }
   };
 
   return (
@@ -48,6 +79,8 @@ const LoginPage = () => {
           </div>
           <button type="submit" className="login-btn">Log in</button>
         </form>
+
+        {error && <p className="error-message">{error}</p>} {/* Visa felmeddelande om något går fel */}
 
         <div className="login-footer">
           <a href="/forgot-password" className="login-link">Forgot password?</a>

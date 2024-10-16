@@ -49,6 +49,21 @@
   color: #e3dd8beb;
 }
 
+.logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+  transform: scale(1.2);
+  color: #e3dd8beb;
+}
+
 /* Lägg till navbar-toggle för hamburgermenyn på mindre skärmar */
 .navbar-toggle {
   display: none;

@@ -1,0 +1,120 @@
+/* Grundläggande styling för hela sidan */
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .profile-section {
+    margin-bottom: 30px;
+  }
+  
+  .profile-section h3 {
+    font-size: 1.5rem;
+    color: #444;
+    margin-bottom: 10px;
+  }
+  
+  /* Styling för inmatningsfält och knappar */
+  .profile-input-group {
+    margin-bottom: 20px;
+  }
+  
+  .profile-input-group label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .profile-input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  
+  .profile-input-group button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-input-group button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Styling för recensioner och favoritböcker */
+  .profile-reviews,
+  .profile-favorites {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+  }
+  
+  .profile-reviews ul,
+  .profile-favorites ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-reviews li,
+  .profile-favorites li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .profile-reviews li:last-child,
+  .profile-favorites li:last-child {
+    border-bottom: none;
+  }
+  
+  .profile-reviews h4,
+  .profile-favorites h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  /* För att hålla footern längst ner */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  footer {
+    margin-top: auto;
+  }
+  
+  /* Responsiv design */
+  @media (max-width: 768px) {
+    .profile-container {
+      padding: 15px;
+    }
+  
+    .profile-input-group button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+  

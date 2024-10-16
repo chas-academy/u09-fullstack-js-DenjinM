@@ -46,6 +46,36 @@ const registerUser = async (req, res) => {
   }
 };
 
+// Inloggningsfunktion
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Kontrollera om användaren finns
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
+    }
+
+    // Jämför lösenordet
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
+    }
+
+    // Skapa en JWT-token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d'
+    });
+
+    // Skicka tillbaka JWT-token och användaruppgifter
+    res.json({ token, user });
+  } catch (error) {
+    console.error('Inloggningsfel:', error);
+    res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
+  }
+};
+
 // Hämta användarens profil
 const getUserProfile = async (req, res) => {
   try {
@@ -85,4 +115,4 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, getUserProfile, updateUserProfile };
+module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };
