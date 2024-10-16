@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 
 // Registrera ny användare
 const registerUser = async (req, res) => {
+  // Logga inkommande data för felsökning
+  console.log(req.body);
+
   const { name, email, password, confirmPassword } = req.body;
 
   try {
@@ -29,8 +32,13 @@ const registerUser = async (req, res) => {
     // Spara användaren i databasen
     await newUser.save();
 
-    // Skicka svar tillbaka till klienten
-    res.status(201).json({ message: 'Användare registrerad', user: newUser });
+    // Skapa en JWT-token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d'
+    });
+
+    // Skicka tillbaka JWT-token och användaruppgifter
+    res.status(201).json({ message: 'Användare registrerad', token, user: newUser });
 
   } catch (error) {
     console.error('Registreringsfel:', error);
