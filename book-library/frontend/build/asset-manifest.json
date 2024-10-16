@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4dec7416.css",
+    "main.js": "/static/js/main.5684042e.js",
+    "static/media/books-background.jpg": "/static/media/books-background.e3abaf8a824706cb87d0.jpg",
+    "static/media/homepage-background.jpg": "/static/media/homepage-background.cbb76cea5033e22b64a4.jpg",
+    "static/media/homepage1.jpg": "/static/media/homepage1.5291d59d5fdbf03f2fc5.jpg",
+    "static/media/homepage2.jpg": "/static/media/homepage2.5fbb0b67c4ca25b8183b.jpg",
+    "static/media/register-background.jpg": "/static/media/register-background.5fbb0b67c4ca25b8183b.jpg",
+    "static/media/homepage3.jpg": "/static/media/homepage3.074915c35711a3bd3d73.jpg",
+    "index.html": "/index.html",
+    "main.4dec7416.css.map": "/static/css/main.4dec7416.css.map",
+    "main.5684042e.js.map": "/static/js/main.5684042e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4dec7416.css",
+    "static/js/main.5684042e.js"
+  ]
+}

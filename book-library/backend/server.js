@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');  // Import Mongoose
+const userRoutes = require('./routes/userRoutes');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,10 +22,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.error("MongoDB connection error:", error);
   });
 
-// Simple route to check if the API is running
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
+// Använd userRoutes för alla förfrågningar relaterade till användare
+app.use('/api/users', userRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5001;
