@@ -83,6 +83,7 @@ const RegisterPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="off"
             />
           </div>
           <div className="input-group">
@@ -94,6 +95,7 @@ const RegisterPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="off"
             />
           </div>
           <div className="input-group">
@@ -105,6 +107,7 @@ const RegisterPage = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              autoComplete="off"
             />
           </div>
           <button type="submit" className="register-btn">Register</button>

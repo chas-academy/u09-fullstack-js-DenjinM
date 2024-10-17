@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const { addBook, deleteBook, deleteUser, deleteReview } = require('../controllers/adminController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/authMiddleware'); // Importera middleware
 
-// Lägg till en ny bok (endast admin)
-router.post('/books', authMiddleware(true), addBook);
+// Använd `protect` för att skydda alla rutter och `admin` för att begränsa till admin
+router.use(protect); // Skyddar alla rutter med inloggning
+router.use(admin);   // Begränsar till admin-användare
 
-// Radera en bok (endast admin)
-router.delete('/books/:id', authMiddleware(true), deleteBook);
+// Lägg till en ny bok
+router.post('/books', addBook);
 
-// Radera en användare (endast admin)
-router.delete('/users/:id', authMiddleware(true), deleteUser);
+// Radera en bok
+router.delete('/books/:id', deleteBook);
 
-// Radera en recension (endast admin)
-router.delete('/reviews/:id', authMiddleware(true), deleteReview);
+// Radera en användare
+router.delete('/users/:id', deleteUser);
+
+// Radera en recension
+router.delete('/reviews/:id', deleteReview);
 
 module.exports = router;

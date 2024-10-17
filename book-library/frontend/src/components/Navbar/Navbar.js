@@ -28,7 +28,12 @@ const Navbar = () => {
         {/* Visa Profil och Logga ut om användaren är inloggad */}
         {user ? (
           <>
-            <li><Link to="/profile">Profile</Link></li>
+            {/* Kolla om användaren är admin och visa Admin-länk */}
+            {user.role === 'admin' ? (
+              <li><Link to="/admin">Admin</Link></li>
+            ) : (
+              <li><Link to="/profile">Profile</Link></li>
+            )}
             <li>
               <button onClick={logout} className="navbar-logout-btn">Log out</button>
             </li>

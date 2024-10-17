@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Review = require('../models/Review');  // Lägg till för att hantera recensioner
 
 // Registrera ny användare
 const registerUser = async (req, res) => {
@@ -115,4 +116,36 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };
+// Hämta användarens recensioner
+const getUserReviews = async (req, res) => {
+    try {
+      const reviews = await Review.find({ user: req.user._id }).populate('book', 'title'); // Fyll i boktiteln
+      if (reviews.length === 0) {
+        return res.status(404).json({ message: 'Inga recensioner hittades.' });
+      }
+      res.json(reviews);
+    } catch (error) {
+      console.error('Fel vid hämtning av recensioner:', error);
+      res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
+    }
+  };
+
+// Hämta användarens favoritböcker
+const getUserFavorites = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('favorites');
+    res.json(user.favorites);
+  } catch (error) {
+    console.error('Fel vid hämtning av favoritböcker:', error);
+    res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
+  }
+};
+
+module.exports = { 
+  registerUser, 
+  loginUser, 
+  getUserProfile, 
+  updateUserProfile, 
+  getUserReviews,   
+  getUserFavorites
+};

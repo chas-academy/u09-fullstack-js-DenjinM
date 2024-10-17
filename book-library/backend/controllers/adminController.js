@@ -4,17 +4,54 @@ const Review = require('../models/Review');
 
 // Lägg till en ny bok
 exports.addBook = async (req, res) => {
-  // Din kod för att lägga till en bok
+  const { title, author, description, price, stock } = req.body;
+
+  try {
+    const newBook = new Book({
+      title,
+      author,
+      description,
+      price,
+      stock,
+    });
+
+    await newBook.save();
+    res.status(201).json({ message: 'Bok tillagd', book: newBook });
+  } catch (error) {
+    res.status(500).json({ message: 'Något gick fel när boken skulle läggas till', error: error.message });
+  }
 };
 
 // Radera en bok
 exports.deleteBook = async (req, res) => {
-  // Din kod för att radera en bok
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ message: 'Bok inte hittad' });
+    }
+
+    await book.remove();
+    res.status(200).json({ message: 'Bok borttagen' });
+  } catch (error) {
+    res.status(500).json({ message: 'Något gick fel', error: error.message });
+  }
 };
 
 // Radera en användare
 exports.deleteUser = async (req, res) => {
-  // Din kod för att radera en användare
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Användare inte hittad' });
+    }
+
+    await user.remove();
+    res.status(200).json({ message: 'Användare borttagen' });
+  } catch (error) {
+    res.status(500).json({ message: 'Något gick fel', error: error.message });
+  }
 };
 
 // Radera en recension

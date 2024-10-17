@@ -34,7 +34,13 @@ const LoginPage = () => {
       if (response.ok) {
         login(data.token); // Spara token i AuthContext
         console.log('Inloggning lyckades:', data);
-        navigate('/profile'); // Omdirigera användaren till profilsidan
+        if (data.user.role==='admin'){
+          navigate('/admin');
+        } else {
+
+        
+        navigate('/profile'); // Omdirigera användaren till profilsidan 
+      }
       } else {
         setError(data.message || 'Fel vid inloggning. Försök igen.');
       }
@@ -54,29 +60,33 @@ const LoginPage = () => {
     }}>
       <div className="login-box">
         <h2>Log in</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label htmlFor="email">Email:</label>
-            <FaEnvelope className="input-icon" />
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="password">Password:</label>
-            <FaLock className="input-icon" />
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} autoComplete="off">
+  <div className="input-group">
+    <label htmlFor="email">Email:</label>
+    <FaEnvelope className="input-icon" />
+    <input
+      type="email"
+      id="email"
+      name="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+      autoComplete="email" // Tillåt förslag på tidigare email-adresser
+    />
+  </div>
+  <div className="input-group">
+    <label htmlFor="password">Password:</label>
+    <FaLock className="input-icon" />
+    <input
+      type="password"
+      id="password"
+      name="password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+      autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
+    />
+  </div>
           <button type="submit" className="login-btn">Log in</button>
         </form>
 

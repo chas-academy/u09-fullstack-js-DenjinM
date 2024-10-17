@@ -10,6 +10,8 @@ import Footer from './components/Footer/Footer';
 import Faq from './pages/Faq/Faq';
 import Contact from './pages/Contact/Contact';
 import Profile from './pages/Profile/Profile';
+import Admin from './pages/Admin/Admin';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
         <Route path="/Faq" element={<Faq />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<ProtectedRoute element={Admin} role="admin" />} />
       </Routes>
       <Footer />
     </Router>
