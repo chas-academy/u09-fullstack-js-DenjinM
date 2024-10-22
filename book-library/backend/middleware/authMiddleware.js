@@ -5,25 +5,16 @@ const User = require('../models/User');
 const protect = async (req, res, next) => {
   let token;
 
-  // Hämta token från Authorization-headern
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      token = req.headers.authorization.split(' ')[1]; // Extrahera token från "Bearer <token>"
-
-      // Verifiera token
+      token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Hämta användarinfo från token och spara den i req.user
-      req.user = await User.findById(decoded.id).select('-password'); // Uteslut lösenordet
-
-      next(); // Fortsätt till nästa middleware
+      req.user = await User.findById(decoded.id).select('-password');
+      next();
     } catch (error) {
-      console.error('Något gick fel med token-verifieringen:', error);
       res.status(401).json({ message: 'Åtkomst nekad. Token är ogiltig eller saknas.' });
     }
-  }
-
-  if (!token) {
+  } else {
     res.status(401).json({ message: 'Åtkomst nekad. Ingen token tillhandahållen.' });
   }
 };

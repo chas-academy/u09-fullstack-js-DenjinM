@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage'; 
 import BookPage from './pages/BookPage/BookPage';
+import BookDetail from './pages/BookPage/BookDetail'; // Import the BookDetail component
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import Navbar from './components/Navbar/Navbar';
@@ -16,23 +17,24 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 function App() {
   return (
     <Router>
-        <AuthProvider>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/BookPage" element={<BookPage />} />
-        <Route path="/LoginPage" element={<LoginPage />} />
-        <Route path="/RegisterPage" element={<RegisterPage />} />
-        <Route path="/Faq" element={<Faq />} />
-        <Route path="/Contact" element={<Contact />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/admin" element={<ProtectedRoute element={Admin} role="admin" />} />
-      </Routes>
+      <AuthProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/BookPage" element={<BookPage />} />
+          {/* Route for viewing detailed book information */}
+          <Route path="/book/:id" element={<BookDetail />} />
+          <Route path="/LoginPage" element={<LoginPage />} />
+          <Route path="/RegisterPage" element={<RegisterPage />} />
+          <Route path="/Faq" element={<Faq />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<ProtectedRoute element={Admin} role="admin" />} />
+        </Routes>
       </AuthProvider>
       <Footer />
     </Router>
   );
 }
-
 
 export default App;

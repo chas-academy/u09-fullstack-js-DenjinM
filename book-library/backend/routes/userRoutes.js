@@ -5,27 +5,29 @@ const {
   getUserProfile, 
   updateUserProfile, 
   registerUser, 
-  getUserReviews,  
-  getUserFavorites 
+  getUserReviews, 
+  addFavorite,
+  getFavorites 
 } = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware'); // Importera korrekt middleware
+const { protect } = require('../middleware/authMiddleware');
 
-// Inloggningsroute
+// Lägg till och hämta favoriter
+router.post('/favorites', protect, addFavorite);
+router.get('/favorites', protect, getFavorites);
+
+// Inloggningsrutter
 router.post('/login', loginUser);
 
-// Registrera ny användare
+// Registrera användare
 router.post('/register', registerUser);
 
-// Hämta användarprofil (endast inloggade användare)
-router.get('/profile', protect, getUserProfile);  // Skydda med `protect`
+// Hämta användarens profil (endast för inloggade användare)
+router.get('/profile', protect, getUserProfile);
 
-// Uppdatera användarprofil (endast inloggade användare)
-router.put('/profile', protect, updateUserProfile);  // Skydda med `protect`
+// Uppdatera användarens profil (endast för inloggade användare)
+router.put('/profile', protect, updateUserProfile);
 
-// Hämta användarens recensioner (endast inloggade användare)
-router.get('/reviews', protect, getUserReviews);  // Ny route för att hämta användarens recensioner, skyddad
-
-// Hämta användarens favoritböcker (endast inloggade användare)
-router.get('/favorites', protect, getUserFavorites);  // Ny route för att hämta användarens favoritböcker, skyddad
+// Hämta användarens recensioner (endast för inloggade användare)
+router.get('/reviews', protect, getUserReviews);
 
 module.exports = router;

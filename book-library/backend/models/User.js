@@ -17,11 +17,25 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'], // Lägger till roller: 'user' eller 'admin'
-    default: 'user', // Default är 'user' om inget annat anges
+    enum: ['user', 'admin'],
+    default: 'user',
   },
+  favorites: [
+    {
+      type: Object,  // För att lagra bokinformationen
+    }
+  ],
 }, {
   timestamps: true,
+});
+
+// Metod för att hasha lösenord innan sparning
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 module.exports = mongoose.model('User', userSchema);

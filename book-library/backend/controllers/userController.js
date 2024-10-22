@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Review = require('../models/Review');  // Lägg till för att hantera recensioner
+const Review = require('../models/Review');
 
 // Registrera ny användare
 const registerUser = async (req, res) => {
@@ -54,14 +54,14 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
-    // Create JWT token with user's role included in the payload
+    // Skapa JWT-token med användarens roll inkluderad i nyttolasten
     const token = jwt.sign(
-      { id: user._id, role: user.role },  // Include role in token
+      { id: user._id, role: user.role },  // Inkludera roll i token
       process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
 
-    // Send the token and user info back to the frontend
+    // Skicka tillbaka token och användarinfo till frontend
     res.json({ token, user });
   } catch (error) {
     console.error('Inloggningsfel:', error);
@@ -96,7 +96,7 @@ const updateUserProfile = async (req, res) => {
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
-      user.password = await bcrypt.hash(req.body.password, 10); // Hash the password
+      user.password = await bcrypt.hash(req.body.password, 10); // Hasha lösenordet
     }
 
     const updatedUser = await user.save();
@@ -109,28 +109,72 @@ const updateUserProfile = async (req, res) => {
 
 // Hämta användarens recensioner
 const getUserReviews = async (req, res) => {
-    try {
-      const reviews = await Review.find({ user: req.user._id }).populate('book', 'title');
-      if (reviews.length === 0) {
-        return res.status(404).json({ message: 'Inga recensioner hittades.' });
-      }
-      res.json(reviews);
-    } catch (error) {
-      console.error('Fel vid hämtning av recensioner:', error);
-      res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
-    }
-  };
-
-// Hämta användarens favoritböcker
-const getUserFavorites = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('favorites');
-    res.json(user.favorites);
+    const reviews = await Review.find({ user: req.user._id }).populate('book', 'title');
+    if (reviews.length === 0) {
+      return res.status(404).json({ message: 'Inga recensioner hittades.' });
+    }
+    res.json(reviews);
   } catch (error) {
-    console.error('Fel vid hämtning av favoritböcker:', error);
+    console.error('Fel vid hämtning av recensioner:', error);
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
+
+// Lägg till bok i favoriter
+// Hämta användarens favoritböcker
+const addFavorite = async (req, res) => {
+  const { book } = req.body;
+
+  if (!book || !book.id || !book.title) {
+    return res.status(400).json({ message: 'Ogiltig bokdata.' });
+  }
+
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Användare hittades inte.' });
+    }
+
+    // Kontrollera att favorites är en array
+    if (!user.favorites) {
+      user.favorites = [];  // Om favorites inte är initialiserat, skapa en tom array
+    }
+
+    const bookExists = user.favorites.some(fav => fav.id === book.id);
+    if (bookExists) {
+      return res.status(400).json({ message: 'Boken är redan tillagd som favorit.' });
+    }
+
+    user.favorites.push(book);  // Lägg till bok i favoriter
+    await user.save();
+
+    res.status(201).json({ message: 'Boken har lagts till som favorit.', favorites: user.favorites });
+  } catch (error) {
+    console.error('Fel vid läggande av favorit:', error);
+    res.status(500).json({ message: 'Serverfel vid läggande av favorit.' });
+  }
+};
+
+
+// Hämta användarens favoriter
+const getFavorites = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'Användare hittades inte.' });
+    }
+
+    // Return favorites directly
+    res.status(200).json({ favorites: user.favorites });
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.status(500).json({ message: 'Fel vid hämtning av favoriter' });
+  }
+};
+
+
 
 module.exports = { 
   registerUser, 
@@ -138,5 +182,6 @@ module.exports = {
   getUserProfile, 
   updateUserProfile, 
   getUserReviews,   
-  getUserFavorites
+  addFavorite,
+  getFavorites,
 };

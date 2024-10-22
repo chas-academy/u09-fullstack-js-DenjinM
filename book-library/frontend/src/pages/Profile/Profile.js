@@ -1,25 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Profile.css';
-import { AuthContext } from '../../contexts/AuthContext'; // Importera AuthContext
+import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 
 const Profile = () => {
-  const { user, logout } = useContext(AuthContext); // Hämta användardata och logout-funktion
+  const { user, logout } = useContext(AuthContext);
   const [name, setName] = useState(user ? user.name : '');
   const [email, setEmail] = useState(user ? user.email : '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [reviews, setReviews] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  
-  // Ny del: Omdirigera till LoginPage om användaren inte finns (dvs inte inloggad)
+
   useEffect(() => {
     if (!user) {
-      window.location.href = '/LoginPage'; // Omdirigera till inloggningssidan
+      window.location.href = '/LoginPage';
     }
   }, [user]);
 
-  // Hämta användarens recensioner och favoritböcker
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -29,19 +27,18 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const reviewsResponse = await axios.get('/api/users/reviews', config);
+        // Hämta favoriter
         const favoritesResponse = await axios.get('/api/users/favorites', config);
-        setReviews(reviewsResponse.data);
-        setFavorites(favoritesResponse.data);
+  
+        setFavorites(favoritesResponse.data.favorites); // Uppdatera state med favoriterna
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
       }
     };
-
+  
     fetchProfileData();
   }, []);
-
-  // Hantera profiluppdatering
+  
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -62,7 +59,7 @@ const Profile = () => {
         updatedData.password = password;
       }
 
-      const response = await axios.put('/api/users/profile', updatedData, config);
+      await axios.put('/api/users/profile', updatedData, config);
       alert('Profilen uppdaterad');
     } catch (error) {
       console.error('Fel vid uppdatering av profil:', error);
@@ -135,24 +132,25 @@ const Profile = () => {
           </ul>
         </div>
       </div>
-
       <div className="profile-section">
-        <h3>Mina Favoritböcker</h3>
-        <div className="profile-favorites">
-          <ul>
-            {favorites.length === 0 ? (
-              <p>Du har inga favoritmarkerade böcker.</p>
-            ) : (
-              favorites.map((book) => (
-                <li key={book._id}>
-                  <h4>{book.title}</h4>
-                  <p>{book.author}</p>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
-      </div>
+  <h3>Mina Favoritböcker</h3>
+  <div className="profile-favorites">
+    <ul>
+      {favorites.length === 0 ? (
+        <p>Du har inga favoritmarkerade böcker.</p>
+      ) : (
+        favorites.map((book) => (
+          <li key={book.id}>
+            <h4>{book.title}</h4>
+            <p>{book.author}</p>
+            <img src={book.thumbnail} alt={book.title} style={{ width: '100px', height: 'auto' }} />
+          </li>
+        ))
+      )}
+    </ul>
+  </div>
+</div>
+
 
       <button onClick={logout} className="logout-btn">Logga ut</button>
     </div>
