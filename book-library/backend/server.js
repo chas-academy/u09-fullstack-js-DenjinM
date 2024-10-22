@@ -2,9 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const axios = require('axios');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const googleBooksRoutes = require('./routes/googleBooksRoutes'); // Lägg till Google Books routes
+const bookRoutes = require('./routes/bookRoutes'); // Dina egna bok-routes
 
 // Load environment variables from .env file
 dotenv.config();
@@ -30,19 +31,8 @@ app.use('/api/users', userRoutes);
 // Använd adminRoutes för alla förfrågningar relaterade till administratörsfunktioner
 app.use('/api/admin', adminRoutes);
 
-app.get('/booktest', async (req, res) => {
-  try {
-    const response = await axios.get('https://www.googleapis.com/books/v1/volumes?q=harry+potter&key=AIzaSyACIzTTImaFlhxZNHDGyqgkdCLjHpKcT_c');  // Byt ut YOUR_API_KEY med din riktiga API-nyckel
-    
-    // Skicka JSON-svaret tillbaka till klienten (Insomnia eller webbläsare)
-    res.send(response.data);
-  } catch (error) {
-    console.error('Error fetching data from Google Books API:', error);
-    
-    // Skicka ett felmeddelande om något går fel
-    res.status(500).send('Error fetching data from Google Books API');
-  }
-})
+app.use('/api/googlebooks', googleBooksRoutes); // Google Books API routes
+app.use('/api/books', bookRoutes); // Dina egna böcker i databasen
 
 // Start the server
 const PORT = process.env.PORT || 5001;

@@ -15,8 +15,8 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
   return (
-    <AuthProvider>
     <Router>
+        <AuthProvider>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -28,9 +28,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<ProtectedRoute element={Admin} role="admin" />} />
       </Routes>
+      </AuthProvider>
       <Footer />
     </Router>
-    </AuthProvider>
   );
 }
 
