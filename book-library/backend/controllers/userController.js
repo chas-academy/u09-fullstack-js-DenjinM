@@ -5,42 +5,34 @@ const Review = require('../models/Review');  // Lägg till för att hantera rece
 
 // Registrera ny användare
 const registerUser = async (req, res) => {
-  // Logga inkommande data för felsökning
   console.log(req.body);
 
   const { name, email, password, confirmPassword } = req.body;
 
   try {
-    // Kontrollera om lösenorden matchar
     if (password !== confirmPassword) {
       return res.status(400).json({ message: 'Lösenorden matchar inte.' });
     }
 
-    // Kontrollera om användaren redan finns
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Användaren finns redan.' });
     }
 
-    // Skapa en ny användare
-    const hashedPassword = await bcrypt.hash(password, 10); // Hasha lösenordet
+    const hashedPassword = await bcrypt.hash(password, 10); 
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
     });
 
-    // Spara användaren i databasen
     await newUser.save();
 
-    // Skapa en JWT-token
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, {
       expiresIn: '30d'
     });
 
-    // Skicka tillbaka JWT-token och användaruppgifter
     res.status(201).json({ message: 'Användare registrerad', token, user: newUser });
-
   } catch (error) {
     console.error('Registreringsfel:', error);
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
@@ -52,24 +44,24 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Kontrollera om användaren finns
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
-    // Jämför lösenordet
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
-    // Skapa en JWT-token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d'
-    });
+    // Create JWT token with user's role included in the payload
+    const token = jwt.sign(
+      { id: user._id, role: user.role },  // Include role in token
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
 
-    // Skicka tillbaka JWT-token och användaruppgifter
+    // Send the token and user info back to the frontend
     res.json({ token, user });
   } catch (error) {
     console.error('Inloggningsfel:', error);
@@ -100,12 +92,11 @@ const updateUserProfile = async (req, res) => {
       return res.status(404).json({ message: 'Användare hittades inte.' });
     }
 
-    // Uppdatera användarens information
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
-      user.password = await bcrypt.hash(req.body.password, 10); // Hasha lösenordet igen
+      user.password = await bcrypt.hash(req.body.password, 10); // Hash the password
     }
 
     const updatedUser = await user.save();
@@ -119,7 +110,7 @@ const updateUserProfile = async (req, res) => {
 // Hämta användarens recensioner
 const getUserReviews = async (req, res) => {
     try {
-      const reviews = await Review.find({ user: req.user._id }).populate('book', 'title'); // Fyll i boktiteln
+      const reviews = await Review.find({ user: req.user._id }).populate('book', 'title');
       if (reviews.length === 0) {
         return res.status(404).json({ message: 'Inga recensioner hittades.' });
       }

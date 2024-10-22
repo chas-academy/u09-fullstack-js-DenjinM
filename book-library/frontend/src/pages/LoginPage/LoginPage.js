@@ -31,17 +31,21 @@ const LoginPage = () => {
 
       const data = await response.json();
 
+      // Om inloggningen lyckas
       if (response.ok) {
         login(data.token); // Spara token i AuthContext
-        console.log('Inloggning lyckades:', data);
-        if (data.user.role==='admin'){
-          navigate('/admin');
-        } else {
+        console.log('Inloggning lyckades:', data.user);
 
-        
-        navigate('/profile'); // Omdirigera användaren till profilsidan 
-      }
+        // Kontrollera om användaren är admin baserat på rollen i responsen
+        if (data.user.role === 'admin') {
+          console.log('Admin identifierad, omdirigerar till admin-dashboard');
+          navigate('/admin'); // Omdirigera till admin-sidan om användaren är admin
+        } else {
+          console.log('Vanlig användare identifierad, omdirigerar till profile');
+          navigate('/profile'); // Omdirigera till profilsidan om användaren inte är admin
+        }
       } else {
+        // Om inloggningen misslyckas
         setError(data.message || 'Fel vid inloggning. Försök igen.');
       }
     } catch (error) {
@@ -61,32 +65,32 @@ const LoginPage = () => {
       <div className="login-box">
         <h2>Log in</h2>
         <form onSubmit={handleSubmit} autoComplete="off">
-  <div className="input-group">
-    <label htmlFor="email">Email:</label>
-    <FaEnvelope className="input-icon" />
-    <input
-      type="email"
-      id="email"
-      name="email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      required
-      autoComplete="email" // Tillåt förslag på tidigare email-adresser
-    />
-  </div>
-  <div className="input-group">
-    <label htmlFor="password">Password:</label>
-    <FaLock className="input-icon" />
-    <input
-      type="password"
-      id="password"
-      name="password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      required
-      autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
-    />
-  </div>
+          <div className="input-group">
+            <label htmlFor="email">Email:</label>
+            <FaEnvelope className="input-icon" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email" // Tillåt förslag på tidigare email-adresser
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password:</label>
+            <FaLock className="input-icon" />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
+            />
+          </div>
           <button type="submit" className="login-btn">Log in</button>
         </form>
 
