@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Användaren finns redan.' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); 
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       name,
       email,
@@ -122,7 +122,6 @@ const getUserReviews = async (req, res) => {
 };
 
 // Lägg till bok i favoriter
-// Hämta användarens favoritböcker
 const addFavorite = async (req, res) => {
   const { book } = req.body;
 
@@ -157,7 +156,6 @@ const addFavorite = async (req, res) => {
   }
 };
 
-
 // Hämta användarens favoriter
 const getFavorites = async (req, res) => {
   try {
@@ -174,6 +172,29 @@ const getFavorites = async (req, res) => {
   }
 };
 
+// Ta bort bok från favoriter
+const removeFavorite = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const bookId = req.params.bookId;  // Hämta bookId från URL-parametern
+
+    // Använd $pull för att ta bort boken med rätt ID från användarens favoriter
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { favorites: { id: bookId } } },  // Ta bort boken med rätt ID
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'Användare hittades inte.' });
+    }
+
+    res.status(200).json({ message: 'Bok borttagen från favoriter', favorites: user.favorites });
+  } catch (error) {
+    console.error('Fel vid borttagning av bok från favoriter:', error);
+    res.status(500).json({ message: 'Fel vid borttagning av bok från favoriter' });
+  }
+};
 
 
 module.exports = { 
@@ -184,4 +205,5 @@ module.exports = {
   getUserReviews,   
   addFavorite,
   getFavorites,
+  removeFavorite,  // Lägg till funktionen här
 };

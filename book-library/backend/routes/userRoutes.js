@@ -7,13 +7,15 @@ const {
   registerUser, 
   getUserReviews, 
   addFavorite,
-  getFavorites 
+  getFavorites,
+  removeFavorite, 
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
 // Lägg till och hämta favoriter
 router.post('/favorites', protect, addFavorite);
 router.get('/favorites', protect, getFavorites);
+router.delete('/favorites/:bookId', protect, removeFavorite);
 
 // Inloggningsrutter
 router.post('/login', loginUser);
