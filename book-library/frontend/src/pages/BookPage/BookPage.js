@@ -1,131 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// const BookPage = () => {
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const [searchResults, setSearchResults] = useState([]);
-//   const [categories, setCategories] = useState({
-//     drama: [],
-//     scifi: [],
-//     thriller: []
-//   });
-
-//   // Fetch books based on categories
-//   useEffect(() => {
-//     const fetchBooksByCategory = async (category) => {
-//       try {
-//         const response = await axios.get(`http://localhost:5001/api/googlebooks/category/${category}`);
-//         setCategories(prevState => ({ ...prevState, [category]: response.data }));
-//       } catch (error) {
-//         console.error(`Error fetching books by category ${category}:`, error);
-//       }
-//     };
-
-//     fetchBooksByCategory('drama');
-//     fetchBooksByCategory('scifi');
-//     fetchBooksByCategory('thriller');
-//   }, []);
-
-//   // Search for books
-//   const handleSearch = async () => {
-//     if (searchQuery.trim()) {
-//       try {
-//         const response = await axios.get(`/api/googlebooks/search?q=${searchQuery}`);
-//         if (response.data.length > 0) {
-//           setSearchResults(response.data);
-//         } else {
-//           alert('No books found.');
-//         }
-//       } catch (error) {
-//         console.error('Error searching books:', error);
-//         alert('An error occurred while searching.');
-//       }
-//     }
-//   };
-
-//   return (
-//     <div className="book-page">
-//       <h1>Book Page</h1>
-
-//       {/* Search functionality */}
-//       <div className="search-section">
-//         <input
-//           type="text"
-//           placeholder="Search for a book or author..."
-//           value={searchQuery}
-//           onChange={(e) => setSearchQuery(e.target.value)}
-//         />
-//         <button onClick={handleSearch}>Search</button>
-//       </div>
-
-//       {/* Show search results if any */}
-//       {searchResults.length > 0 && (
-//         <div className="search-results">
-//           <h2>Search Results:</h2>
-//           <div className="book-grid">
-//             {searchResults.map((book) => (
-//               <div key={book.id} className="book-card">
-//                 <img
-//                   src={book.volumeInfo.imageLinks?.thumbnail}
-//                   alt={book.volumeInfo.title}
-//                 />
-//                 <h3>{book.volumeInfo.title}</h3>
-//                 <p>{book.volumeInfo.authors?.join(', ')}</p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Categories */}
-//       <div className="category-section">
-//         <h2>Drama</h2>
-//         <div className="book-grid">
-//           {categories.drama.map((book) => (
-//             <div key={book.id} className="book-card">
-//               <img
-//                 src={book.volumeInfo.imageLinks?.thumbnail}
-//                 alt={book.volumeInfo.title}
-//               />
-//               <h3>{book.volumeInfo.title}</h3>
-//               <p>{book.volumeInfo.authors?.join(', ')}</p>
-//             </div>
-//           ))}
-//         </div>
-
-//         <h2>Sci-Fi</h2>
-//         <div className="book-grid">
-//           {categories.scifi.map((book) => (
-//             <div key={book.id} className="book-card">
-//               <img
-//                 src={book.volumeInfo.imageLinks?.thumbnail}
-//                 alt={book.volumeInfo.title}
-//               />
-//               <h3>{book.volumeInfo.title}</h3>
-//               <p>{book.volumeInfo.authors?.join(', ')}</p>
-//             </div>
-//           ))}
-//         </div>
-
-//         <h2>Thriller</h2>
-//         <div className="book-grid">
-//           {categories.thriller.map((book) => (
-//             <div key={book.id} className="book-card">
-//               <img
-//                 src={book.volumeInfo.imageLinks?.thumbnail}
-//                 alt={book.volumeInfo.title}
-//               />
-//               <h3>{book.volumeInfo.title}</h3>
-//               <p>{book.volumeInfo.authors?.join(', ')}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BookPage;
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -212,13 +84,12 @@ const BookPage = () => {
 
   return (
     <div className="book-page">
-      <h1>Book Page</h1>
 
       {/* Sökning */}
       <div className="search-section">
         <input
           type="text"
-          placeholder="Search for a book or author..."
+          placeholder="Search for a book or author"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -232,7 +103,7 @@ const BookPage = () => {
       {searchResults.length > 0 && (
         <div className="search-results">
           <h2>Search Results:</h2>
-          <div className="book-grid">
+          <div className="bookpage-grid">
             {searchResults.map((book) => (
               <div key={book.id || book.volumeInfo.industryIdentifiers?.[0]?.identifier} className="book-card">
                 <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
@@ -249,7 +120,7 @@ const BookPage = () => {
       {/* Visa kategorier */}
       <div className="category-section">
         <h2>Drama</h2>
-        <div className="book-grid">
+        <div className="bookpage-grid">
           {categories.drama.map((book) => (
             <div key={book.id || book.volumeInfo.industryIdentifiers?.[0]?.identifier} className="book-card">
               <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
@@ -262,7 +133,7 @@ const BookPage = () => {
         </div>
 
         <h2>Sci-Fi</h2>
-        <div className="book-grid">
+        <div className="bookpage-grid">
           {categories.scifi.map((book) => (
             <div key={book.id || book.volumeInfo.industryIdentifiers?.[0]?.identifier} className="book-card">
               <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
@@ -275,7 +146,7 @@ const BookPage = () => {
         </div>
 
         <h2>Thriller</h2>
-        <div className="book-grid">
+        <div className="bookpage-grid">
           {categories.thriller.map((book) => (
             <div key={book.id || book.volumeInfo.industryIdentifiers?.[0]?.identifier} className="book-card">
               <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />

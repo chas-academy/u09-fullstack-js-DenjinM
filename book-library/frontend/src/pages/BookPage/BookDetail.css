@@ -1,0 +1,102 @@
+/* Container för att centrera boxen */
+.book-detail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; /* Justera för att footern ska vara längst ner */
+    padding: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, #d0cdcd, #fdefef);
+  }
+  
+  /* Box som håller bokens information */
+  .book-detail-box {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Titel på boken */
+  .book-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Bild på boken */
+  .book-thumbnail {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  /* Information om författare */
+  .book-author {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* Beskrivning av boken */
+  .book-description {
+    font-size: 14px;
+    margin-bottom: 20px;
+    white-space: pre-line; /* Gör att radbrytningar visas korrekt */
+  }
+  
+  /* Knapp för att lägga till i favoriter */
+  .favorite-btn {
+    padding: 10px 20px;
+    background-color: #ebe268eb;
+    color: #111010;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .favorite-btn:hover {
+    background-color: #f2f603;
+  }
+  
+  /* RESPONSIV DESIGN */
+  
+  /* För mindre skärmar, maxbredd 600px (mobila enheter) */
+  @media (max-width: 600px) {
+    .book-detail-box {
+      padding: 15px;
+      max-width: 100%;
+      text-align: left;
+    }
+  
+    .book-title {
+      font-size: 20px;
+      text-align: center;
+    }
+  
+    .book-thumbnail {
+      width: 120px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 15px;
+    }
+  
+    .book-author {
+      font-size: 14px;
+    }
+  
+    .book-description {
+      font-size: 13px;
+    }
+  
+    .favorite-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+  
