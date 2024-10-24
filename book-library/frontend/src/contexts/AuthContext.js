@@ -1,35 +1,42 @@
 import { createContext, useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false); // Lägg till isAdmin som en state
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      const decoded = jwt_decode(token);
-      console.log('Decoded token on page load:', decoded); // Logga token vid laddning av sidan
-      setUser(decoded);
-      setIsAdmin(decoded.role === 'admin'); // Kontrollera om användaren är admin
+    const storedUser = localStorage.getItem('user');
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsAdmin(JSON.parse(storedUser).role === 'admin');
     }
   }, []);
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
-    const decoded = jwt_decode(token);
-    console.log('Decoded token after login:', decoded); // Logga token vid inloggning
-    setUser(decoded);
-    setIsAdmin(decoded.role === 'admin'); // Kontrollera om användaren är admin vid inloggning
+  const login = (data) => {
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify({
+      id: data._id,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+    }));
+    setUser({
+      id: data._id,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+    });
+    setIsAdmin(data.role === 'admin');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
-    setIsAdmin(false); // Nollställ admin-status vid utloggning
-    console.log('User logged out'); // Logga utloggning för felsökning
+    setIsAdmin(false);
   };
 
   return (

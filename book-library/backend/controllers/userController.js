@@ -5,69 +5,97 @@ const Review = require('../models/Review');
 
 // Registrera ny användare
 const registerUser = async (req, res) => {
-  console.log(req.body);
-
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;
+  console.log('Registrering med lösenord:', password);
 
   try {
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Lösenorden matchar inte.' });
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(400).json({ message: "Användaren finns redan." });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Användaren finns redan.' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
+    // Skapa användare utan att hasha lösenordet här
+    const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password: password.trim(),
+    });
+    
+
+    console.log('Användare skapad:', user);
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
     });
 
-    await newUser.save();
-
-    const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, {
-      expiresIn: '30d'
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token,
     });
-
-    res.status(201).json({ message: 'Användare registrerad', token, user: newUser });
   } catch (error) {
-    console.error('Registreringsfel:', error);
-    res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 // Inloggningsfunktion
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Inloggningsförsök med e-post:', email);
+  console.log('Inskickat lösenord:', password);
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
+      console.log('Användaren hittades inte.');
+      return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Felaktig e-post eller lösenord.' });
+    console.log('Användare hittad:', user);
+    console.log('Hashat lösenord i databasen:', user.password);
+
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
+
+    console.log('Lösenord matchar:', isMatch);
+    
+    if (isMatch) {
+      user.failedLoginAttempts = 0;
+      await user.save();
+
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
+
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token,
+      });
+    } else {
+      user.failedLoginAttempts += 1;
+      console.log('Misslyckade inloggningsförsök:', user.failedLoginAttempts);
+      if (user.failedLoginAttempts >= 4) {
+        user.isLocked = true;
+        await user.save();
+        return res.status(403).json({ message: "Kontot är låst på grund av flera misslyckade inloggningsförsök." });
+      }
+
+      await user.save();
+      return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
-
-    // Skapa JWT-token med användarens roll inkluderad i nyttolasten
-    const token = jwt.sign(
-      { id: user._id, role: user.role },  // Inkludera roll i token
-      process.env.JWT_SECRET,
-      { expiresIn: '30d' }
-    );
-
-    // Skicka tillbaka token och användarinfo till frontend
-    res.json({ token, user });
   } catch (error) {
-    console.error('Inloggningsfel:', error);
-    res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
+    console.error('Fel i loginUser:', error);
+    res.status(500).json({ message: error.message });
   }
 };
+
+
 
 // Hämta användarens profil
 const getUserProfile = async (req, res) => {
@@ -96,7 +124,7 @@ const updateUserProfile = async (req, res) => {
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
-      user.password = await bcrypt.hash(req.body.password, 10); // Hasha lösenordet
+      user.password = req.body.password; // Lösenordet kommer att hashas i pre('save') middleware
     }
 
     const updatedUser = await user.save();
@@ -106,6 +134,7 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
+
 
 // Hämta användarens recensioner
 const getUserReviews = async (req, res) => {

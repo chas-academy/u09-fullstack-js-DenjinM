@@ -2,22 +2,21 @@ import React, { useState, useContext } from 'react';
 import './LoginPage.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import backgroundImage from '../../images/books-background.jpg';
-import { AuthContext } from '../../contexts/AuthContext'; // Importera AuthContext för att hantera inloggning
-import { useNavigate } from 'react-router-dom'; // Importera useNavigate för att omdirigera användaren
+import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { login } = useContext(AuthContext); // Använd login-funktionen från AuthContext
-  const navigate = useNavigate(); // Använd navigate för omdirigering
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Skicka POST-förfrågan till backend för att logga in
       const response = await fetch('http://localhost:5001/api/users/login', {
         method: 'POST',
         headers: {
@@ -28,31 +27,23 @@ const LoginPage = () => {
           password: password,
         }),
       });
-
+  
       const data = await response.json();
-
-      // Om inloggningen lyckas
+      console.log('Svarande data från server:', data);
+  
       if (response.ok) {
-        login(data.token); // Spara token i AuthContext
-        console.log('Inloggning lyckades:', data.user);
-
-        // Kontrollera om användaren är admin baserat på rollen i responsen
-        if (data.user.role === 'admin') {
-          console.log('Admin identifierad, omdirigerar till admin-dashboard');
-          navigate('/admin'); // Omdirigera till admin-sidan om användaren är admin
-        } else {
-          console.log('Vanlig användare identifierad, omdirigerar till profile');
-          navigate('/profile'); // Omdirigera till profilsidan om användaren inte är admin
-        }
+        login(data); // Skicka hela dataobjektet
+        console.log('Inloggning lyckades:', data);
+        navigate('/'); // Omdirigera användaren efter lyckad inloggning
       } else {
-        // Om inloggningen misslyckas
-        setError(data.message || 'Fel vid inloggning. Försök igen.');
+        console.error('Fel vid inloggning:', data.message);
+        setError(data.message);
       }
     } catch (error) {
-      setError('Serverfel. Försök igen senare.');
-      console.error('Inloggningsfel:', error);
+      console.error('Nätverksfel eller serverfel:', error);
+      setError('Ett fel uppstod. Vänligen försök igen senare.');
     }
-  };
+  };  
 
   return (
     <div className="login-container"
@@ -75,7 +66,7 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="email" // Tillåt förslag på tidigare email-adresser
+              autoComplete="email"
             />
           </div>
           <div className="input-group">
@@ -88,13 +79,13 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
+              autoComplete="new-password"
             />
           </div>
           <button type="submit" className="login-btn">Log in</button>
         </form>
 
-        {error && <p className="error-message">{error}</p>} {/* Visa felmeddelande om något går fel */}
+        {error && <p className="error-message">{error}</p>}
 
         <div className="login-footer">
           <a href="/forgot-password" className="login-link">Forgot password?</a>
