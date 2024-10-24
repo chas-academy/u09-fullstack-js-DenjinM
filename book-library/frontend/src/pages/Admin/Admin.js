@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
-import './Admin.css'; // Skapa och styla adminpanelen
+import './Admin.css';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 
 const Admin = () => {
-  const { user, isAdmin, logout } = useContext(AuthContext); // Kontrollera om användaren är inloggad och om det är admin
+  const { user, isAdmin, logout } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [books, setBooks] = useState([]);
@@ -16,20 +16,22 @@ const Admin = () => {
     description: ''
   });
   
+  // Sätt bas-URL för Axios
+  axios.defaults.baseURL = 'http://localhost:5001';
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); // Hämta JWT-token från localStorage
+        const token = localStorage.getItem('token');
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         };
 
-        // Skicka GET-förfrågan till backend för att hämta alla användare
+        // Uppdaterad URL med bas-URL
         const response = await axios.get('/api/admin/users', config);
-        setUsers(response.data); // Sätt användarna i state
+        setUsers(response.data);
       } catch (error) {
         console.error('Fel vid hämtning av användare:', error);
         setError('Kunde inte hämta användardata.');
@@ -37,18 +39,15 @@ const Admin = () => {
     };
 
     if (isAdmin) {
-      fetchUsers(); // Hämta användare endast om användaren är admin
+      fetchUsers();
     }
   }, [isAdmin]);
 
-
-  // Omdirigera om användaren inte är admin
   useEffect(() => {
-    console.log(user);
     if (!user || !isAdmin) {
-      window.location.href = '/LoginPage'; // Omdirigera till inloggningssidan om inte admin
+      window.location.href = '/LoginPage';
     }
-  }, [user]);
+  }, [user, isAdmin]);
 
   // Hämta användare, böcker och recensioner
   useEffect(() => {
@@ -88,7 +87,7 @@ const Admin = () => {
 
       await axios.post('/api/admin/books', newBook, config);
       alert('Boken har lagts till!');
-      setNewBook({ title: '', author: '', price: '', description: '' }); // Återställ formuläret
+      setNewBook({ title: '', author: '', price: '', description: '' });
     } catch (error) {
       console.error('Fel vid tillägg av bok:', error);
     }
@@ -106,7 +105,7 @@ const Admin = () => {
 
       await axios.delete(`/api/admin/books/${bookId}`, config);
       alert('Boken har tagits bort!');
-      setBooks(books.filter((book) => book._id !== bookId)); // Uppdatera boken i UI
+      setBooks(books.filter((book) => book._id !== bookId));
     } catch (error) {
       console.error('Fel vid borttagning av bok:', error);
     }
@@ -121,12 +120,13 @@ const Admin = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-
-      await axios.delete(`/api/admin/users/${userId}`, config);
-      alert('Användaren har tagits bort!');
+  
+      const response = await axios.delete(`/api/admin/users/${userId}`, config);
+      alert(response.data.message);
       setUsers(users.filter((user) => user._id !== userId));
     } catch (error) {
-      console.error('Fel vid borttagning av användare:', error);
+      console.error('Fel vid borttagning av användare:', error.response.data);
+      alert(`Kunde inte ta bort användaren: ${error.response.data.message}`);
     }
   };
 
