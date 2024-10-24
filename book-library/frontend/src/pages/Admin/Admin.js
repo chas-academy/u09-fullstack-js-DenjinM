@@ -4,8 +4,9 @@ import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 
 const Admin = () => {
-  const { user, isAdmin, logout } = useContext(AuthContext);
+  const { user, isAdmin, logout } = useContext(AuthContext); // Kontrollera om användaren är inloggad och om det är admin
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
   const [books, setBooks] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [newBook, setNewBook] = useState({
@@ -14,6 +15,32 @@ const Admin = () => {
     price: '',
     description: ''
   });
+  
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Hämta JWT-token från localStorage
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        // Skicka GET-förfrågan till backend för att hämta alla användare
+        const response = await axios.get('/api/admin/users', config);
+        setUsers(response.data); // Sätt användarna i state
+      } catch (error) {
+        console.error('Fel vid hämtning av användare:', error);
+        setError('Kunde inte hämta användardata.');
+      }
+    };
+
+    if (isAdmin) {
+      fetchUsers(); // Hämta användare endast om användaren är admin
+    }
+  }, [isAdmin]);
+
 
   // Omdirigera om användaren inte är admin
   useEffect(() => {

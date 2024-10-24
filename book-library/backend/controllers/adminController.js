@@ -2,6 +2,16 @@ const Book = require('../models/Book');
 const User = require('../models/User');
 const Review = require('../models/Review');
 
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}); // Hämta alla användare från databasen
+    res.json(users); // Returnera användardata som JSON
+  } catch (error) {
+    console.error('Fel vid hämtning av användare:', error);
+    res.status(500).json({ message: 'Serverfel vid hämtning av användare.' });
+  }
+};
+
 // Lägg till en ny bok
 exports.addBook = async (req, res) => {
   const { title, author, description, price, stock } = req.body;
