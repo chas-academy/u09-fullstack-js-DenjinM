@@ -1,12 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Grundläggande meta-taggar -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Book Library</title>
+
+    <!-- PWA-specifika meta-taggar och länkar -->
+    <!-- Temafärg för webbläsarens adressfält -->
+    <meta name="theme-color" content="#000000">
+
+    <!-- Länk till manifestfilen -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+
+    <!-- Ikoner för olika enheter -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="%PUBLIC_URL%/icons/icon-512x512.png">
+
+    <!-- Fallback favicon -->
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Registrera din anpassade service worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker
+            .register('/custom-service-worker.js')
+            .then(function(registration) {
+              console.log('Service Worker registrerad med scope:', registration.scope);
+            })
+            .catch(function(error) {
+              console.log('Service Worker registrering misslyckades:', error);
+            });
+        });
+      }
+    </script>
 </body>
 </html>

@@ -10,9 +10,8 @@ const Profile = () => {
   const [email, setEmail] = useState(user ? user.email : '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [reviews, setReviews] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [message, setMessage] = useState(''); // Lägg till ett tillstånd för meddelandet
+  const [favorites, setFavorites] = useState([]); // Default to an empty array
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -29,9 +28,8 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        // Hämta favoriter
         const favoritesResponse = await axios.get('/api/users/favorites', config);
-        setFavorites(favoritesResponse.data.favorites);
+        setFavorites(favoritesResponse.data.favorites || []); // Ensure it's an array
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
       }
@@ -39,7 +37,6 @@ const Profile = () => {
     fetchProfileData();
   }, []);
 
-  // Funktion för att ta bort bok från favoriter
   const handleRemoveFavorite = async (bookId) => {
     try {
       const token = localStorage.getItem('token');
@@ -48,15 +45,14 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      console.log(bookId);
       await axios.delete(`/api/users/favorites/${bookId}`, config);
-            setFavorites(favorites.filter(book => book.id !== bookId)); // Uppdatera state för att ta bort boken lokalt
-      setMessage('Boken borttagen från dina favoriter'); // Visa meddelande
+      setFavorites(favorites.filter(book => book.id !== bookId));
+      setMessage('Boken borttagen från dina favoriter');
     } catch (error) {
       console.error('Fel vid borttagning av bok från favoriter:', error);
       setMessage('Ett fel uppstod vid borttagning av boken');
     }
-  };  
+  };
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -109,7 +105,7 @@ const Profile = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="off" // Förhindra automatisk ifyllning av email
+              autoComplete="off"
             />
           </div>
           <div className="profile-input-group">
@@ -119,7 +115,7 @@ const Profile = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
+              autoComplete="new-password"
             />
           </div>
           <div className="profile-input-group">
@@ -129,7 +125,7 @@ const Profile = () => {
               id="confirm-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              autoComplete="new-password" // Förhindra automatisk ifyllning av lösenord
+              autoComplete="new-password"
             />
           </div>
           <button type="submit" className="profile-btn">Uppdatera Profil</button>
@@ -140,7 +136,7 @@ const Profile = () => {
         <h3>Mina Recensioner</h3>
         <div className="profile-reviews">
           <ul>
-            {reviews.length === 0 ? (
+            {reviews && reviews.length === 0 ? (
               <p>Du har inga recensioner.</p>
             ) : (
               reviews.map((review) => (
@@ -159,7 +155,7 @@ const Profile = () => {
         <h3>Mina Favoritböcker</h3>
         <div className="profile-favorites">
           <ul>
-            {favorites.length === 0 ? (
+            {favorites && favorites.length === 0 ? (
               <p>Du har inga favoritmarkerade böcker.</p>
             ) : (
               favorites.map((book) => (
@@ -177,13 +173,12 @@ const Profile = () => {
             )}
           </ul>
         </div>
-        {message && <p className="message">{message}</p>} {/* Visa meddelande */}
+        {message && <p className="message">{message}</p>}
       </div>
 
       <button onClick={logout} className="logout-btn">Logga ut</button>
     </div>
   );
 };
-
 
 export default Profile;
