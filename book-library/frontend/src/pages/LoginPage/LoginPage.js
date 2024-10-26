@@ -19,20 +19,14 @@ const LoginPage = () => {
   
     try {
       const response = await axiosInstance.post('/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        email: email,
+        password: password,
       });
   
-      const data = await response.json();
+      const data = response.data;
       console.log('Svarande data från server:', data);
   
-      if (response.ok) {
+      if (response.status === 200) {
         login(data); // Skicka hela dataobjektet
         console.log('Inloggning lyckades:', data);
         navigate('/'); // Omdirigera användaren efter lyckad inloggning
@@ -44,7 +38,7 @@ const LoginPage = () => {
       console.error('Nätverksfel eller serverfel:', error);
       setError('Ett fel uppstod. Vänligen försök igen senare.');
     }
-  };  
+  };
 
   return (
     <div className="login-container"
