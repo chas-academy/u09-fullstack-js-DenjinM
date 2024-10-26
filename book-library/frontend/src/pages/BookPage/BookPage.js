@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import "./BookPage.css"
-
+import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
 const BookPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -20,7 +20,8 @@ const BookPage = () => {
   useEffect(() => {
     const fetchBooksByCategory = async (category) => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/googlebooks/category/${category}`);
+        const response = await axiosInstance.get(`/googlebooks/category/${category}`);
+
         setCategories(prevState => ({ ...prevState, [category]: response.data }));
       } catch (error) {
         console.error(`Error fetching books by category ${category}:`, error);

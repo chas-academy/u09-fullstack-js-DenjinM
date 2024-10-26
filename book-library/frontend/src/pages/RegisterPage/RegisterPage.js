@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './RegisterPage.css';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import backgroundImage from '../../images/register-background.jpg';
-
+import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
 const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const RegisterPage = () => {
 
     try {
       // Skicka POST-förfrågan till backend
-      const response = await fetch('http://localhost:5001/api/users/register', {
+      const response = await axiosInstance.post('/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

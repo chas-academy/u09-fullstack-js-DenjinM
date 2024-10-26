@@ -4,6 +4,7 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import backgroundImage from '../../images/books-background.jpg';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const LoginPage = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:5001/api/users/login', {
+      const response = await axiosInstance.post('/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

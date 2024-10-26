@@ -2,15 +2,15 @@
 
 import axios from 'axios';
 
-// Skapa en instans av axios med bas-URL
+// Skapa en instans av axios med bas-URL från miljövariabel
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001/api', // Byt ut mot din backend-URL vid behov
+  baseURL: process.env.REACT_APP_API_URL, // Använd miljövariabel
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Lägg till en interceptor för att inkludera tokenet i varje förfrågan
+// Lägg till interceptors...
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -24,13 +24,10 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Lägg till en interceptor för svarsfel
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Token är ogiltig eller har löpt ut
-      // Logga ut användaren eller omdirigera till inloggningssidan
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/LoginPage';

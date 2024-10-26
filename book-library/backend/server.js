@@ -15,7 +15,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'https://u09-book-library.netlify.app', // Din Netlify frontend-URL
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // MongoDB connection with Mongoose

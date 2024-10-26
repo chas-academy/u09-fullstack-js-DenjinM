@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom'; // Lägg till useNavigate här
 import './BookDetail.css'; // Importera din CSS-fil
-
+import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
 const BookDetail = () => {
   const { id } = useParams(); // Få id från URL:en
   const [book, setBook] = useState(null);
@@ -48,7 +48,7 @@ const BookDetail = () => {
         thumbnail: book.volumeInfo.imageLinks?.thumbnail,
       };
 
-      await axios.post('http://localhost:5001/api/users/favorites', { book: favoriteBook }, {
+      await axiosInstance.post('/users/favorites', { book: favoriteBook }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
