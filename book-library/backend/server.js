@@ -19,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection with Mongoose
+// Test
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
