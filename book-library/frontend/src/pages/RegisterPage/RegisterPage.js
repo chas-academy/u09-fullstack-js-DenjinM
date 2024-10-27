@@ -29,14 +29,14 @@ const RegisterPage = () => {
         confirmPassword: confirmPassword,
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         setSuccess('Registrering lyckades!');
         setError('');
         console.log('Success:', response.data);
         // Eventuell omdirigering, t.ex. till inloggningssidan:
         // window.location.href = '/LoginPage';
       } else {
-        setError(data.message || 'Registreringsfel, försök igen.');
+        setError(response.data.message || 'Registreringsfel, försök igen.');
       }
     } catch (error) {
       setError('Något gick fel. Försök igen senare.');
