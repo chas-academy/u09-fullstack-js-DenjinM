@@ -32,7 +32,7 @@ const RegisterPage = () => {
       if (response.ok) {
         setSuccess('Registrering lyckades!');
         setError('');
-        console.log('Success:', data);
+        console.log('Success:', response.data);
         // Eventuell omdirigering, t.ex. till inloggningssidan:
         // window.location.href = '/LoginPage';
       } else {
