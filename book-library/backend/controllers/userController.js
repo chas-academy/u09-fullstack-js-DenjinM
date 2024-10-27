@@ -4,56 +4,9 @@ const jwt = require('jsonwebtoken');
 const Review = require('../models/Review');
 
 // Registrera ny användare
-// const registerUser = async (req, res) => {
-//   const { name, email, password } = req.body;
-//   console.log('Registrering med lösenord:', password);
-
-//   try {
-//     const userExists = await User.findOne({ email });
-
-//     if (userExists) {
-//       return res.status(400).json({ message: "Användaren finns redan." });
-//     }
-
-//     // Skapa användare utan att hasha lösenordet här
-//     const user = await User.create({
-//       name,
-//       email,
-//       password: password.trim(),
-//     });
-    
-
-//     console.log('Användare skapad:', user);
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "30d",
-//     });
-
-//     res.status(201).json({
-//       _id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role,
-//       token,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 const registerUser = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;
   console.log('Registrering med lösenord:', password);
-
-  // Kontrollera att alla fält är ifyllda
-  if (!name || !email || !password || !confirmPassword) {
-    return res.status(400).json({ message: 'Alla fält är obligatoriska' });
-  }
-
-  // Kontrollera att lösenorden matchar
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Lösenorden matchar inte' });
-  }
 
   try {
     const userExists = await User.findOne({ email });
@@ -62,14 +15,13 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Användaren finns redan." });
     }
 
-    // Hasha lösenordet innan du skapar användaren
-    const hashedPassword = await bcrypt.hash(password.trim(), 10);
-
+    // Skapa användare utan att hasha lösenordet här
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password: password.trim(),
     });
+    
 
     console.log('Användare skapad:', user);
 
@@ -88,6 +40,7 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Inloggningsfunktion
 const loginUser = async (req, res) => {
@@ -272,10 +225,29 @@ const removeFavorite = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    if (req.params.id === req.user._id.toString()) {
+      return res.status(400).json({ message: "Du kan inte ta bort dig själv" });
+    }
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+      await user.deleteOne();
+      res.json({ message: "Användare borttagen" });
+    } else {
+      res.status(404).json({ message: "Användare hittades inte" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Kunde inte ta bort användare" });
+  }
+};
+
 
 module.exports = { 
   registerUser, 
   loginUser, 
+  deleteUser,
   getUserProfile, 
   updateUserProfile, 
   getUserReviews,   
