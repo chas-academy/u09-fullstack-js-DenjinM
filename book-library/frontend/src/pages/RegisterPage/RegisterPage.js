@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './RegisterPage.css';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import backgroundImage from '../../images/register-background.jpg';
-import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
+import axios from 'axios';
 const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -11,35 +11,70 @@ const RegisterPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Kontrollera att lösenord och bekräftat lösenord matchar
+  //   if (password !== confirmPassword) {
+  //     setError('Lösenorden matchar inte');
+  //     return;
+  //   }
+
+  //   try {
+  //     // Skicka POST-förfrågan till backend med axiosInstance
+  //     const response = await axiosInstance.post('users/register', {
+  //       name: name,
+  //       email: email,
+  //       password: password,
+  //     });
+
+  //     if (response.status === 201) {
+  //       setSuccess('Registrering lyckades!');
+  //       setError('');
+  //       console.log('Success:', response.data);
+  //       // Eventuell omdirigering, t.ex. till inloggningssidan:
+  //       // window.location.href = '/LoginPage';
+  //     } else {
+  //       setError(response.data.message || 'Registreringsfel, försök igen.');
+  //     }
+  //   } catch (error) {
+  //     setError('Något gick fel. Försök igen senare.');
+  //     console.error('Error:', error);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Kontrollera att lösenord och bekräftat lösenord matchar
+  
     if (password !== confirmPassword) {
       setError('Lösenorden matchar inte');
       return;
     }
-
+  
     try {
-      // Skicka POST-förfrågan till backend med axiosInstance
-      const response = await axiosInstance.post('users/register', {
+      const response = await axios.post('https://u09-fullstack-js-denjinm.onrender.com/api/users/register', {
         name: name,
         email: email,
         password: password,
+      }, {
+        headers: { 'Content-Type': 'application/json' } // Ingen Authorization-header här
       });
-
+  
       if (response.status === 201) {
         setSuccess('Registrering lyckades!');
         setError('');
         console.log('Success:', response.data);
-        // Eventuell omdirigering, t.ex. till inloggningssidan:
-        // window.location.href = '/LoginPage';
       } else {
         setError(response.data.message || 'Registreringsfel, försök igen.');
       }
     } catch (error) {
-      setError('Något gick fel. Försök igen senare.');
-      console.error('Error:', error);
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || 'Något gick fel. Försök igen senare.');
+        console.error('Backend Error:', error.response.data);
+      } else {
+        setError('Något gick fel. Försök igen senare.');
+        console.error('Error:', error);
+      }
     }
   };
 
