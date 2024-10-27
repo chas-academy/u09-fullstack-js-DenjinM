@@ -42,17 +42,12 @@ const Review = require('../models/Review');
 // };
 
 const registerUser = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;  // Ta bort confirmPassword från destructuring
   console.log('Registrering med lösenord:', password);
 
   // Kontrollera att alla fält är ifyllda
-  if (!name || !email || !password || !confirmPassword) {
+  if (!name || !email || !password) {
     return res.status(400).json({ message: 'Alla fält är obligatoriska' });
-  }
-
-  // Kontrollera att lösenorden matchar
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Lösenorden matchar inte' });
   }
 
   try {
