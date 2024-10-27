@@ -26,10 +26,9 @@ const RegisterPage = () => {
         name: name,
         email: email,
         password: password,
-        confirmPassword: confirmPassword,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setSuccess('Registrering lyckades!');
         setError('');
         console.log('Success:', response.data);
