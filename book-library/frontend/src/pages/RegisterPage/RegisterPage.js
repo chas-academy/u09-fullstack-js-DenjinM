@@ -21,22 +21,13 @@ const RegisterPage = () => {
     }
 
     try {
-      // Skicka POST-förfrågan till backend
-      const response = await axios.post('https://u09-fullstack-js-denjinm.onrender.com/users/register', {
+      // Skicka POST-förfrågan till backend med axiosInstance
+      const response = await axiosInstance.post('users/register', {
         name: name,
         email: email,
         password: password,
         confirmPassword: confirmPassword,
-      
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-          confirmPassword: confirmPassword
-        }),
       });
-
-      const data = await response.json();
 
       if (response.ok) {
         setSuccess('Registrering lyckades!');
