@@ -1,7 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Admin.css';
 import { AuthContext } from '../../contexts/AuthContext';
+import axiosInstance from '../../api/axiosInstance';
 import axios from 'axios';
+
+
 
 const Admin = () => {
   const { user, isAdmin, logout } = useContext(AuthContext);
@@ -16,8 +19,12 @@ const Admin = () => {
     description: ''
   });
   
-  // Sätt bas-URL för Axios
-  axios.defaults.baseURL = 'http://localhost:5001';
+  const axiosInstance = axios.create({
+    baseURL: 'https://u09-fullstack-js-denjinm.onrender.com/api',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -30,7 +37,7 @@ const Admin = () => {
         };
 
         // Uppdaterad URL med bas-URL
-        const response = await axios.get('/api/admin/users', config);
+        const response = await axiosInstance.get('admin/users');
         setUsers(response.data);
       } catch (error) {
         console.error('Fel vid hämtning av användare:', error);
@@ -59,9 +66,9 @@ const Admin = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const usersResponse = await axios.get('/api/admin/users', config);
-        const booksResponse = await axios.get('/api/admin/books', config);
-        const reviewsResponse = await axios.get('/api/admin/reviews', config);
+        const usersResponse = await axiosInstance.get('admin/users');
+        const booksResponse = await axiosInstance.get('admin/books');
+        const reviewsResponse = await axiosInstance.get('admin/reviews');
 
         setUsers(usersResponse.data);
         setBooks(booksResponse.data);
@@ -85,7 +92,7 @@ const Admin = () => {
         },
       };
 
-      await axios.post('/api/admin/books', newBook, config);
+      await axiosInstance.post('admin/books', newBook, config);
       alert('Boken har lagts till!');
       setNewBook({ title: '', author: '', price: '', description: '' });
     } catch (error) {
@@ -103,7 +110,7 @@ const Admin = () => {
         },
       };
 
-      await axios.delete(`/api/admin/books/${bookId}`, config);
+      await axiosInstance.delete(`admin/books/${bookId}`, config);
       alert('Boken har tagits bort!');
       setBooks(books.filter((book) => book._id !== bookId));
     } catch (error) {
@@ -121,7 +128,7 @@ const Admin = () => {
         },
       };
   
-      const response = await axios.delete(`/api/admin/users/${userId}`, config);
+      const response = await axiosInstance.delete(`admin/users/${userId}`, config);
       alert(response.data.message);
       setUsers(users.filter((user) => user._id !== userId));
     } catch (error) {
@@ -140,7 +147,7 @@ const Admin = () => {
         },
       };
 
-      await axios.delete(`/api/admin/reviews/${reviewId}`, config);
+      await axiosInstance.delete(`admin/reviews/${reviewId}`, config);
       alert('Recensionen har tagits bort!');
       setReviews(reviews.filter((review) => review._id !== reviewId));
     } catch (error) {

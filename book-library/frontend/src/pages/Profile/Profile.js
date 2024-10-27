@@ -28,7 +28,7 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const favoritesResponse = await axios.get('users/favorites', config);
+        const response = await axiosInstance.get('/users/profile');
         setFavorites(favoritesResponse.data.favorites || []); // Ensure it's an array
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
