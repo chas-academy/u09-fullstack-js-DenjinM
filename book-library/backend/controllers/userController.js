@@ -92,6 +92,7 @@ const loginUser = async (req, res) => {
   console.log('Inskickat lösenord:', password);
 
   try {
+    // Kontrollera om användaren finns
     const user = await User.findOne({ email });
     if (!user) {
       console.log('Användaren hittades inte.');
@@ -101,18 +102,22 @@ const loginUser = async (req, res) => {
     console.log('Användare hittad:', user);
     console.log('Hashat lösenord i databasen:', user.password);
 
+    // Jämför lösenord
     const isMatch = await bcrypt.compare(password.trim(), user.password);
+    console.log('Lösenord matchar:', isMatch); // Kolla om bcrypt jämför lösenordet korrekt
 
-    console.log('Lösenord matchar:', isMatch);
-    
     if (isMatch) {
+      // Återställ antalet misslyckade inloggningsförsök om lösenordet matchar
       user.failedLoginAttempts = 0;
       await user.save();
 
+      // Generera JWT-token och logga det för att se om den skapas korrekt
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
       });
+      console.log('Genererad token:', token);
 
+      // Skicka tillbaka användardata och token som svar
       res.json({
         _id: user._id,
         name: user.name,
@@ -121,11 +126,15 @@ const loginUser = async (req, res) => {
         token,
       });
     } else {
+      // Om lösenordet inte stämmer, öka antalet misslyckade inloggningsförsök
       user.failedLoginAttempts += 1;
       console.log('Misslyckade inloggningsförsök:', user.failedLoginAttempts);
+
+      // Lås kontot efter för många misslyckade försök
       if (user.failedLoginAttempts >= 4) {
         user.isLocked = true;
         await user.save();
+        console.log("Kontot är nu låst.");
         return res.status(403).json({ message: "Kontot är låst på grund av flera misslyckade inloggningsförsök." });
       }
 
@@ -137,6 +146,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
