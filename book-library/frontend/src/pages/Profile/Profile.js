@@ -14,6 +14,7 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [favorites, setFavorites] = useState([]); // Default to an empty array
   const [message, setMessage] = useState('');
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     if (!user) {
@@ -30,8 +31,9 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axiosInstance.get('/users/profile');
+        const response = await axiosInstance.get('users/profile');
         setFavorites(favoritesResponse.data.favorites || []); // Ensure it's an array
+        setReviews(response.data.reviews || []);
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
       }
@@ -76,7 +78,6 @@ const Profile = () => {
       if (password) {
         updatedData.password = password;
       }
-      // await axios.put('/api/users/profile', updatedData, config);
       await axiosInstance.put('users/profile', updatedData);
       alert('Profilen uppdaterad');
     } catch (error) {
