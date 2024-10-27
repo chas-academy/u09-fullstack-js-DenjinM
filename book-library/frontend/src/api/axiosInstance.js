@@ -1,15 +1,12 @@
-// src/api/axiosInstance.js
-
 import axios from 'axios';
 
-// Skapa en instans av axios med bas-URL från miljövariabel
+// Skapa en instans av axios med bas-URL
 const axiosInstance = axios.create({
-  baseURL: 'https://u09-fullstack-js-denjinm.onrender.com', // Observera "/api" här
+  baseURL: 'https://u09-fullstack-js-denjinm.onrender.com/api', // Lägg tillbaka "/api" här
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
 
 // Lägg till interceptors...
 axiosInstance.interceptors.request.use(

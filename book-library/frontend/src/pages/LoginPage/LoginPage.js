@@ -5,7 +5,7 @@ import backgroundImage from '../../images/books-background.jpg';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance'; // Justera sökvägen om nödvändigt
-
+import axios from 'axios';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +18,7 @@ const LoginPage = () => {
     e.preventDefault();
   
     try {
-      const response = await axiosInstance.post('api/users/login', {
+      const response = await axios.post('https://u09-fullstack-js-denjinm.onrender.com/users/login', {
         email: email,
         password: password,
       });

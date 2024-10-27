@@ -22,11 +22,12 @@ const RegisterPage = () => {
 
     try {
       // Skicka POST-förfrågan till backend
-      const response = await axiosInstance.post('/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await axios.post('https://u09-fullstack-js-denjinm.onrender.com/users/register', {
+        name: name,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      
         body: JSON.stringify({
           name: name,
           email: email,
