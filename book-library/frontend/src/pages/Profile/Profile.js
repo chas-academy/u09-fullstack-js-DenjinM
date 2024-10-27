@@ -28,7 +28,7 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const favoritesResponse = await axios.get('/api/users/favorites', config);
+        const favoritesResponse = await axios.get('users/favorites', config);
         setFavorites(favoritesResponse.data.favorites || []); // Ensure it's an array
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
@@ -45,7 +45,8 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(`/api/users/favorites/${bookId}`, config);
+      // await axios.delete(`/api/users/favorites/${bookId}`, config);
+      await axios.delete(`users/favorites/${bookId}`, config);
       setFavorites(favorites.filter(book => book.id !== bookId));
       setMessage('Boken borttagen från dina favoriter');
     } catch (error) {
@@ -73,8 +74,8 @@ const Profile = () => {
       if (password) {
         updatedData.password = password;
       }
-
-      await axios.put('/api/users/profile', updatedData, config);
+      // await axios.put('/api/users/profile', updatedData, config);
+      await axios.put('users/profile', updatedData, config);
       alert('Profilen uppdaterad');
     } catch (error) {
       console.error('Fel vid uppdatering av profil:', error);
