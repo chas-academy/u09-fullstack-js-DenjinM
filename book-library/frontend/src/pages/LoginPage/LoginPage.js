@@ -18,10 +18,13 @@ const LoginPage = () => {
     e.preventDefault();
   
     try {
-      const response = await axiosInstance.post('users/login', {
-        email: email,
-        password: password,
+      const response = await axios.post('https://u09-fullstack-js-denjinm.onrender.com/api/users/login', {
+         email,
+         password
+      }, {
+         headers: { 'Content-Type': 'application/json' }
       });
+
   
       const data = response.data;
       console.log('Svarande data från server:', data);
