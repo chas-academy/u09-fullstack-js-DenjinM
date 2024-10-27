@@ -3,6 +3,8 @@ import './Profile.css';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 import { FaTrash } from 'react-icons/fa';
+import axiosInstance from '../../api/axiosInstance';
+
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
@@ -46,7 +48,7 @@ const Profile = () => {
         },
       };
       // await axios.delete(`/api/users/favorites/${bookId}`, config);
-      await axios.delete(`users/favorites/${bookId}`, config);
+      await axiosInstance.delete(`users/favorites/${bookId}`);
       setFavorites(favorites.filter(book => book.id !== bookId));
       setMessage('Boken borttagen från dina favoriter');
     } catch (error) {
@@ -75,7 +77,7 @@ const Profile = () => {
         updatedData.password = password;
       }
       // await axios.put('/api/users/profile', updatedData, config);
-      await axios.put('users/profile', updatedData, config);
+      await axiosInstance.put('users/profile', updatedData);
       alert('Profilen uppdaterad');
     } catch (error) {
       console.error('Fel vid uppdatering av profil:', error);

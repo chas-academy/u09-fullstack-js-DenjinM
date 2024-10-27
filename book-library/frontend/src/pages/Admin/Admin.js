@@ -19,12 +19,6 @@ const Admin = () => {
     description: ''
   });
   
-  const axiosInstance = axios.create({
-    baseURL: 'https://u09-fullstack-js-denjinm.onrender.com/api',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -92,7 +86,7 @@ const Admin = () => {
         },
       };
 
-      await axiosInstance.post('admin/books', newBook, config);
+      await axiosInstance.post('admin/books', newBook);
       alert('Boken har lagts till!');
       setNewBook({ title: '', author: '', price: '', description: '' });
     } catch (error) {
@@ -110,7 +104,7 @@ const Admin = () => {
         },
       };
 
-      await axiosInstance.delete(`admin/books/${bookId}`, config);
+      await axiosInstance.delete(`admin/books/${bookId}`);
       alert('Boken har tagits bort!');
       setBooks(books.filter((book) => book._id !== bookId));
     } catch (error) {
@@ -128,7 +122,7 @@ const Admin = () => {
         },
       };
   
-      const response = await axiosInstance.delete(`admin/users/${userId}`, config);
+      const response = await axiosInstance.delete(`admin/users/${userId}`);
       alert(response.data.message);
       setUsers(users.filter((user) => user._id !== userId));
     } catch (error) {
@@ -147,7 +141,7 @@ const Admin = () => {
         },
       };
 
-      await axiosInstance.delete(`admin/reviews/${reviewId}`, config);
+      await axiosInstance.delete(`admin/reviews/${reviewId}`);
       alert('Recensionen har tagits bort!');
       setReviews(reviews.filter((review) => review._id !== reviewId));
     } catch (error) {
