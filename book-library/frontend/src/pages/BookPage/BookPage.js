@@ -37,7 +37,8 @@ const BookPage = () => {
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        const response = await axios.get(`http://localhost:5001/api/googlebooks/search?q=${searchQuery}`);
+        const response = await axiosInstance.get(`/googlebooks/search?q=${searchQuery}`);
+
         setSearchResults(response.data);
       } catch (error) {
         console.error('Error searching books:', error);
@@ -64,8 +65,8 @@ const BookPage = () => {
         author: book.volumeInfo.authors?.join(', '),
         thumbnail: book.volumeInfo.imageLinks?.thumbnail,
       };
-
-      await axios.post('http://localhost:5001/api/users/favorites', { book: favoriteBook }, {
+    
+      await axiosInstance.post('api/users/favorites', { book: favoriteBook }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
