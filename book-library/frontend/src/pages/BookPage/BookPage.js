@@ -66,7 +66,7 @@ const BookPage = () => {
         thumbnail: book.volumeInfo.imageLinks?.thumbnail,
       };
     
-      await axiosInstance.post('api/users/favorites', { book: favoriteBook }, {
+      await axiosInstance.post('users/favorites', { book: favoriteBook }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

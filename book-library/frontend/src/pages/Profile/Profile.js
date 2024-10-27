@@ -32,7 +32,7 @@ const Profile = () => {
           },
         };
         const response = await axiosInstance.get('users/profile');
-        setFavorites(favoritesResponse.data.favorites || []); // Ensure it's an array
+        setFavorites(response.data.favorites || []); // Ensure it's an array
         setReviews(response.data.reviews || []);
       } catch (error) {
         console.error('Fel vid hämtning av profildata:', error);
