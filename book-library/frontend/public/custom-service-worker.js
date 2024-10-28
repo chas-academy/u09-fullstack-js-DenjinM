@@ -15,7 +15,8 @@ const urlsToCache = [
   "/Faq",
   "/RegisterPage",
   "/LoginPage",
-  "/BookPage"
+  "/BookPage",
+  "/BookDetail"
 ];
 
 // Install event: Cache essential resources
