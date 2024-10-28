@@ -18,9 +18,53 @@ In the initial stages of UX design, I conducted a survey to gather user informat
 
 ### Tech Stack
 
+**Frontend** - React
 
+**Backend** - Node.js, Express, MongoDB (Atlas), JWT
 
 ### Deploy
 
 **Frontend** - Netlify
+
 **Backend** - Render
+
+### Installation
+
+#### 1. Clone the repo
+
+```https://github.com/chas-academy/u09-fullstack-js-DenjinM.git```
+
+#### 2. Backend install
+
+```cd backend```
+```npm install```
+
+Create `.env` file and put in:
+
+```
+MONGO_URI=(Your own MONGO_URI)
+PORT=5001
+JWT_SECRET=ThMEqYfsga@&?~/8X-RP4C,mjGu3<6nwrVxT34Flk
+GOOGLE_BOOKS_API_KEY=AIzaSyACIzTTImaFlhxZNHDGyqgkdCLjHpKcT_c
+``` 
+
+Start the server:
+
+```npm start```
+
+#### 3. Frontend install
+
+```cd frontend```
+```npm install```
+
+Create `.env` file and put in:
+
+```
+REACT_APP_API_URL=https://u09-fullstack-js-denjinm.onrender.com/api
+```
+
+Open frontend to use:
+
+```https://u09-book-library.netlify.app```
+
+
