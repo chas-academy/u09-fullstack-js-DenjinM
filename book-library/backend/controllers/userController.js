@@ -3,47 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Review = require('../models/Review');
 
-// Registrera ny användare
-// const registerUser = async (req, res) => {
-//   const { name, email, password } = req.body;
-//   console.log('Registrering med lösenord:', password);
-
-//   try {
-//     const userExists = await User.findOne({ email });
-
-//     if (userExists) {
-//       return res.status(400).json({ message: "Användaren finns redan." });
-//     }
-
-//     // Skapa användare utan att hasha lösenordet här
-//     const user = await User.create({
-//       name,
-//       email,
-//       password: password.trim(),
-//     });
-    
-
-//     console.log('Användare skapad:', user);
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "30d",
-//     });
-
-//     res.status(201).json({
-//       _id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role,
-//       token,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;  // Ta bort confirmPassword från destructuring
-  console.log('Registrering med lösenord:', password);
+  const { name, email, password } = req.body; 
 
   // Kontrollera att alla fält är ifyllda
   if (!name || !email || !password) {
@@ -103,8 +65,8 @@ const loginUser = async (req, res) => {
     console.log('Hashat lösenord i databasen:', user.password);
 
     // Jämför lösenord
-    const isMatch = await bcrypt.compare(password.trim(), user.password);
-    console.log('Lösenord matchar:', isMatch); // Kolla om bcrypt jämför lösenordet korrekt
+    const isMatch = await bcrypt.compare(password, user.password); // Ta bort .trim() här om det inte behövs
+    console.log('Resultat av lösenordsjämförelse:', isMatch); // Kolla om bcrypt jämför lösenordet korrekt
 
     if (isMatch) {
       // Återställ antalet misslyckade inloggningsförsök om lösenordet matchar
@@ -118,7 +80,7 @@ const loginUser = async (req, res) => {
       console.log('Genererad token:', token);
 
       // Skicka tillbaka användardata och token som svar
-      res.json({
+      return res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -146,6 +108,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
