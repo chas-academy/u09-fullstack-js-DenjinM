@@ -329,36 +329,41 @@ const registerUser = async (req, res) => {
 // Inloggningsfunktion
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Inloggningsförsök med e-post:', email);
+  console.log('Inskickat lösenord:', password);
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('Användaren hittades inte i databasen.');
       return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
+
+    console.log('Användare hittad:', user);
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
-    if (isMatch) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-      });
+    console.log('Lösenordsjämförelse:', isMatch);
 
-      return res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token,
-      });
-    } else {
+    if (!isMatch) {
+      console.log('Lösenordet matchar inte.');
       return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    console.log('Genererad token:', token);
+
+    return res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token,
+    });
   } catch (error) {
-    console.error('Fel vid inloggning:', error);
+    console.error('Fel i loginUser:', error);
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
-
-
 
 
 

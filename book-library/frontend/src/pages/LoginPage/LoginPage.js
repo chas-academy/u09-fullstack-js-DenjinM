@@ -117,29 +117,26 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    console.log('Skickar följande inloggningsdata:', { email, password }); // Lägg till detta för debugging
+  
     try {
-      // Använd axiosInstance istället för hårdkodad URL
       const response = await axiosInstance.post('/users/login', {
         email,
         password,
       });
-
+  
       const data = response.data;
       console.log('Svarande data från server:', data);
-
-      // Kontrollera om inloggningen lyckades
-      if (response.status === 200) {
-        login(data); // Uppdatera AuthContext med användarens data
-        console.log('Inloggning lyckades:', data);
-        navigate('/'); // Omdirigera användaren efter lyckad inloggning
-      }
+  
+      login(data);
+      navigate('/');
     } catch (error) {
-      console.error('Nätverksfel eller serverfel:', error);
-      // Visa serverns felmeddelande om det finns, annars visa ett generellt felmeddelande
-      setError(error.response?.data?.message || 'Ett fel uppstod. Vänligen försök igen senare.');
+      console.error('Inloggningsfel:', error.response?.data?.message || error.message);
+      setError(error.response?.data?.message || 'Ett fel uppstod. Försök igen senare.');
     }
   };
+  
 
   return (
     <div
