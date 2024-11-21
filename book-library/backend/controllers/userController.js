@@ -296,19 +296,27 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Användaren finns redan.' });
     }
 
-    // Hash lösenordet
-    const hashedPassword = await bcrypt.hash(password.trim(), 10);
+    // Kontrollera om lösenordet redan är hashat
+    const hashedPassword = password.startsWith('$2a$') ? password : await bcrypt.hash(password.trim(), 10);
 
+    console.log('Lösenord efter hashing:', hashedPassword);
+
+    // Skapa användaren
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
     });
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
+    });
+
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      token,
     });
   } catch (error) {
     console.error('Fel vid registrering:', error);
