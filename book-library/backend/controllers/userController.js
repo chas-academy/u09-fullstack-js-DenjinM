@@ -298,24 +298,17 @@ const registerUser = async (req, res) => {
 
     // Hash lösenordet
     const hashedPassword = await bcrypt.hash(password.trim(), 10);
-    console.log('Hashat lösenord:', hashedPassword);
 
-    // Skapa användaren
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
     });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '30d',
-    });
-
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token,
     });
   } catch (error) {
     console.error('Fel vid registrering:', error);
@@ -324,10 +317,13 @@ const registerUser = async (req, res) => {
 };
 
 
-
 // Inloggningsfunktion
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Alla fält är obligatoriska.' });
+  }
 
   try {
     const user = await User.findOne({ email });
@@ -335,6 +331,7 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
+    // Kontrollera lösenordet
     const isMatch = await bcrypt.compare(password.trim(), user.password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
@@ -355,6 +352,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
+
 
 
 

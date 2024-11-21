@@ -1,20 +1,18 @@
 const bcrypt = require('bcryptjs');
-const User = require('./models/User'); // Uppdatera med rätt sökväg
 
-const updatePassword = async () => {
-  const email = 'tiger@tiger.tiger'; // Användarens e-post
-  const newPassword = 'tiger'; // Nytt lösenord
+// Simulera lösenord som används vid registrering och inloggning
+const plainPassword = 'elefant';
 
+(async () => {
   try {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const user = await User.findOneAndUpdate(
-      { email },
-      { password: hashedPassword }
-    );
-    console.log('Lösenord uppdaterat:', user);
-  } catch (error) {
-    console.error('Fel vid uppdatering av lösenord:', error);
-  }
-};
+    // Skapa en hash av lösenordet
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);
+    console.log('Hashat lösenord:', hashedPassword);
 
-updatePassword();
+    // Kontrollera om bcrypt jämför korrekt
+    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
+    console.log('Jämförelseresultat:', isMatch); // Bör vara true
+  } catch (err) {
+    console.error('Fel vid hashning eller jämförelse:', err);
+  }
+})();
