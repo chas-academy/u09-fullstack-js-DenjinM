@@ -297,9 +297,9 @@ const registerUser = async (req, res) => {
     }
 
     // Kontrollera om lösenordet redan är hashat
-    const hashedPassword = password.startsWith('$2a$') ? password : await bcrypt.hash(password.trim(), 10);
+    // const hashedPassword = password.startsWith('$2a$') ? password : await bcrypt.hash(password.trim(), 10);
 
-    console.log('Lösenord efter hashing:', hashedPassword);
+    // console.log('Lösenord efter hashing:', hashedPassword);
 
     // Skapa användaren
     const user = await User.create({
