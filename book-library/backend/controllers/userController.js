@@ -339,10 +339,10 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Felaktig e-post eller lösenord.' });
     }
 
-    console.log('Användare hittad:', user);
+    console.log('Användare hittad i databasen:', user);
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
-    console.log('Lösenordsjämförelse:', isMatch);
+    console.log('Lösenordsjämförelse-resultat:', isMatch);
 
     if (!isMatch) {
       console.log('Lösenordet matchar inte.');
@@ -360,10 +360,11 @@ const loginUser = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error('Fel i loginUser:', error);
+    console.error('Fel vid inloggning:', error);
     res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
+
 
 
 
