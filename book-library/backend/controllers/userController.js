@@ -284,33 +284,34 @@ const Review = require('../models/Review');
 
 
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body; 
+  const { name, email, password } = req.body;
 
   // Kontrollera att alla fält är ifyllda
   if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Alla fält är obligatoriska' });
+    return res.status(400).json({ message: 'Alla fält är obligatoriska.' });
   }
 
   try {
+    // Kontrollera om användaren redan finns
     const userExists = await User.findOne({ email });
-
     if (userExists) {
-      return res.status(400).json({ message: "Användaren finns redan." });
+      return res.status(400).json({ message: 'Användaren finns redan.' });
     }
 
-    // Hasha lösenordet innan du skapar användaren
+    // Hasha lösenordet
     const hashedPassword = await bcrypt.hash(password.trim(), 10);
+    console.log('Hashat lösenord:', hashedPassword);
 
+    // Skapa användare
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password: hashedPassword, // Spara hashat lösenord
     });
 
-    console.log('Användare skapad:', user);
-
+    // Skapa JWT-token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
+      expiresIn: '30d',
     });
 
     res.status(201).json({
@@ -321,7 +322,8 @@ const registerUser = async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Fel vid registrering:', error);
+    res.status(500).json({ message: 'Serverfel. Försök igen senare.' });
   }
 };
 
